@@ -1,0 +1,17 @@
+<html>
+   
+   <head>
+      <meta content = 'text/html; charset = UTF-8' http-equiv = 'Content-Type' />
+   </head>
+   
+   <body>
+      <h1>Hi, <%= @invitee ||"" %></h1>
+
+      <p> <%= @business_name %> is inviting you to join their team on Digiftng  </p>
+
+      <p>Please click below to accept the invite</p>
+
+      <%= link_to "Accept Invite", "#{ENV['WEB_APP_URL'] || 'https://www.digiftng.com'}/auth/register/team?token=#{@reference}" %>
+      
+   </body>
+</html>

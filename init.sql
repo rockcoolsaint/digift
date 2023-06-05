@@ -1,0 +1,2 @@
+CREATE USER digiftng;
+ALTER USER digiftng WITH SUPERUSER;

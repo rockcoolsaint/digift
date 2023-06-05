@@ -1,0 +1,15 @@
+---
+business_1:
+  business_name: business_name_1
+  country_of_incorporation:
+  profile: profile_1
+  industry: Information Technology
+  staff_strength: 1-5
+  role_at_business: manager
+business_2:
+  business_name: business_name_2
+  country_of_incorporation:
+  profile: profile_2
+  industry: eCommerce
+  staff_strength: 5-10
+  role_at_business: owner

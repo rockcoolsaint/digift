@@ -1,0 +1,2 @@
+class VendorAllowedGiftcardSource < ApplicationRecord
+end

@@ -1,0 +1,74 @@
+version: '3.4'
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        BUNDLER_VERSION: ${BUNDLER_VERSION}
+    depends_on:
+      - database
+      - redis
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - .:/app
+      - gem_cache:/usr/local/bundle/gems
+      - node_modules:/app/node_modules
+    env_file: .env
+    environment: &sys_digiftng-api_env
+      DATABASE_HOST: database
+      WARMUP_DEPLOY: 'true'
+      DB_SETUP: 'false'
+      RAILS_ENV: development
+      RACK_ENV: development
+      # RAILS_ENV: production
+      # RACK_ENV: production
+      RAILS_LOG_TO_STDOUT: enabled
+      RAILS_SERVE_STATIC_FILES: enabled
+      # BUNDLER_VERSION: 2.2.3
+  database:
+    image: postgres:12.1
+    restart: always
+    ports:
+      - "2335:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  redis:
+    image: redis:5.0.7
+    volumes:
+      - redis:/data
+
+
+  # memcached:
+  #   image: memcached:1.5-alpine
+  #   volumes:
+  #     - memcache:/data    
+
+  sidekiq:
+    build:
+      context: .
+      # dockerfile: ./.docker/Dockerfile
+    depends_on:
+      - app
+      - database
+      - redis
+    links:
+      - redis  
+      - database
+    volumes:
+      - .:/app
+      - gem_cache:/usr/local/bundle/gems
+      - node_modules:/app/node_modules
+    env_file: .env
+    environment:
+      <<: *sys_digiftng-api_env
+    entrypoint: ./entrypoints/sidekiq-entrypoint.sh
+
+volumes:
+  gem_cache:
+  db_data:
+  node_modules:
+  redis:

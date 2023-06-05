@@ -1,0 +1,14 @@
+<% default_pass = ENV["DEFAULT_PASSWORD"] %>
+---
+user_DIG_admin:
+  email: DIG-admin@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, default_pass) %>
+  uid: DIG-admin@example.com
+user_client_1:
+  email: client1@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, default_pass) %>
+  uid: client1@example.com
+user_client_2:
+  email: client2@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, default_pass) %>
+  uid: client2@example.com

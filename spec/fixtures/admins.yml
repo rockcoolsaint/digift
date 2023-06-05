@@ -1,0 +1,11 @@
+<% admin_password = ENV["ADMIN_PASSWORD"] %>
+<% admin_email = ENV["ADMIN_EMAIL"] %>
+---
+user_DIG_admin:
+  email: <%=admin_email%> 
+  encrypted_password: <%= Devise::Encryptor.digest(Admin, admin_password) %>
+  uid: <%=admin_email%> 
+  tokens: <%= ENV["ADMIN_TOKEN"]%>
+  confirmed_at: <%= ENV["ADMIN_CONFIRMED_AT"] || Time.current %>
+  role:  <%= ENV["ADMIN_ROLE"] || "admin" %>
+  created_by:  <%= ENV["ADMIN_EMAIL"] || "seun@digiftng.com" %>

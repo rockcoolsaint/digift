@@ -1,0 +1,108 @@
+name: Staging Heroku Deploy
+
+on:
+  push:
+    branches:
+      - develop
+      # - master
+  pull_request:
+    branches:
+      - develop
+      # - master
+
+# env:
+#   PROJECT_ID: ${{ secrets.GCR_PROJECT }}
+#   RUN_REGION: europe-west1
+#   SERVICE_NAME: ${{ secrets.GCR_SERVICE_NAME }} 
+#   PORT: 1337
+#   DATABASE_NAME: digiftng
+#   DATABASE_NAME_TEST: digiftng_test
+#   DATABASE_USER: digiftng
+#   DATABASE_PASSWORD: ${{ secrets.GCR_PROJECT_DATABASE_PASSSWORD }}
+#   DATABASE_HOST: database
+#   REDIS_HOST: redis
+#   BUNDLER_VERSION: 2.2.3
+#   INSTANCE_CONNECTION_NAME: ${{ secrets.GCR_DATABASE_INSTANCE_CONNECTION_NAME }}
+#   RAILS_MASTER_KEY: ${{ secrets.GCR_RAILS_MASTER_KEY }}
+#   BLINKSKY_API_KEY: ${{ secrets.GCR_BLINKSKY_API_KEY }}
+#   WEB_APP_URL: ${{ secrets.GCR_WEB_APP_URL }}
+
+
+jobs:
+  verify:
+    name: Build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14.0
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      # if you need redis
+      # redis:
+      #   image: redis
+      #   ports:
+      #   - 6379:6379
+      #   options: --entrypoint redis-server
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.1
+          bundler-cache: true
+      # - name: Set up Node
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: 12.x
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get upgrade -yqq libpq-dev build-essential libcurl4-openssl-dev
+        # gem install bundler
+        # bundle install --jobs 4 --retry 3
+        #  yarn install
+      # - name: Setup test database
+      #   env:
+      #     RAILS_ENV: test
+      #     DATABASE_HOST: localhost
+      #     DATABASE_NAME_TEST: rails_github_actions_test
+      #     DATABASE_USER: rails_github_actions
+      #     DATABASE_PASSWORD: postgres
+      #   run: |
+      #     bundle exec rails db:create db:migrate 
+        # rake db:create db:migrate 
+        # cp config/database-gcr-deploy.yml config/database.yml
+      # - name: Run tests
+      #   env:
+      #     PGHOST: localhost
+      #     POSTGRES_DB: rails_github_actions_test
+      #     POSTGRES_USER: rails_github_actions
+      #     POSTGRES_PASSWORD: postgres
+      #     PGPORT: ${{ job.services.postgres.ports[5432] }}
+      #     RAILS_ENV: test
+      #   run: rspec
+
+
+  heroku-deploy:
+    name: Deploy to Heroku
+    needs: verify
+    runs-on: ubuntu-latest
+    if: contains('refs/heads/develop refs/heads/master', github.ref)
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME_STAGING }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          usedocker: false

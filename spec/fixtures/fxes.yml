@@ -1,0 +1,42 @@
+<% ng_rate = ENV["FX_RATE"] %>
+<% usd_rate = ENV["USD_RATE"] %>
+<% gbp_rate = ENV["GBP_RATE"] %>
+<% eur_rate = ENV["GBP_RATE"] %>
+---
+# fx_1:
+#   name: naira
+#   currency: ngn
+#   currency_symbol: ₦
+#   iso: ng
+#   rate: <%= ng_rate %>
+#   exchange_rate: <%= ng_rate.to_d %>
+#   is_active: true
+#   is_public: true
+
+fx_2:
+  name: dollar
+  currency: usd
+  currency_symbol: $
+  iso: us
+  rate: <%= usd_rate %>
+  exchange_rate: <%= ng_rate.to_d / usd_rate.to_d %> 
+  is_active: true
+
+fx_3:
+  name: pound
+  currency: gbp
+  currency_symbol: £
+  iso: gb
+  rate: <%= gbp_rate %>
+  exchange_rate: <%= ng_rate.to_d / gbp_rate.to_d %> 
+  is_active: true
+
+
+fx_4:
+  name: euro
+  currency: eur
+  currency_symbol: €
+  iso: eu
+  rate: <%= eur_rate.to_d %>
+  exchange_rate: <%= ng_rate.to_d / eur_rate.to_d %> 
+  is_active: true

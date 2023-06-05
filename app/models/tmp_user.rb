@@ -1,0 +1,2 @@
+class TmpUser < ApplicationRecord
+end

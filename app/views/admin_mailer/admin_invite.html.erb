@@ -1,0 +1,17 @@
+<html>
+   
+   <head>
+      <meta content = 'text/html; charset = UTF-8' http-equiv = 'Content-Type' />
+   </head>
+   
+   <body>
+      <h1>Hi, <%= @invitee ||"" %></h1>
+
+      <p> You have been invited to join Digiftng as an admin  </p>
+
+      <p>Please click below to accept the invite</p>
+
+      <%= link_to "Accept Admin Invite", "#{ENV['ADMIN_WEB_APP_URL'] || 'https://staging-watchtower-digiftng.herokuapp.com'}/register/admin?token=#{@reference}" %>
+      
+   </body>
+</html>

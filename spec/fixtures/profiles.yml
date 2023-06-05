@@ -1,0 +1,11 @@
+---
+profile_1:
+  user: user_client_1
+  first_name: profile_1_firstname
+  last_name:  profile_1_lastname
+  profile_type: personal
+profile_2:
+  user: user_client_2
+  first_name: profile_2_firstname
+  last_name:  profile_2_firstname
+  profile_type: business
